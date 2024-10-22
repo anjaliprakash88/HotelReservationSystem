@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+          crossorigin="anonymous">
+    <title>HOTEL</title>
+  </head>
+  <body>
+
+
+  <nav class="navbar navbar-light bg-light">
+  <form class="container-fluid justify-content-start">
+    <button class="btn btn-outline-success me-2" type="button">
+        <a href="{% url 'check_available' %}">Availability</a>
+    </button>
+  </form>
+  </nav>
+
+
+
+
+     <div class="container">
+         <div class="row">
+             <div class="col-md-6">
+                 <table class="table">
+                     <thead>
+                         <tr>
+                             <th scope="col">ROOM NUMBER</th>
+                             <th scope="col">CATEGORY</th>
+                             <th scope="col">BASE PRICE</th>
+                         </tr>
+                     </thead>
+                     <tbody>
+                         <tr>
+                         {% for room in rooms %}
+                             <th scope="row">{{ room.room_no }}</th>
+                             <td>{{ room.category.name }}</td>
+                             <td>{{ room.category.base_price }}</td>
+                             {% endfor %}
+                         </tr>
+                     </tbody>
+                 </table>
+             </div>
+             <div class="col-md-6">
+                 <form method="POST" action="{% url 'reserve_room' %}">
+                     {% csrf_token %}
+                     <div class="mb-3">
+                         <label for="" class="form-label">ROOM: </label>
+                         <select class="form-select" name="room">
+                              {% for room in rooms %}
+                             <option value="{{ room.id }}">ROOM {{ room.room_no }} -{{ room.category.name }}</option>
+                             {% endfor %}
+                         </select>
+                     </div>
+                     <div class="mb-3">
+                         <label for="" class="form-label">CUSTOMER NAME: </label>
+                         <input type="text" class="form-control" name="customer_name">
+                     </div>
+                     <div class="mb-3">
+                         <label for="" class="form-label">START DATE: </label>
+                         <input type="date" class="form-control" id="check_in" name="start_date">
+                     </div>
+                     <div class="mb-3">
+                         <label for="" class="form-label">END DATE: </label>
+                         <input type="date" class="form-control" id="check_out" name="end_date">
+                     </div>
+                     <button type="submit" class="btn btn-primary">Submit</button>
+                 </form>
+             </div>
+         </div>
+     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <script>
+    const today = new Date().toISOString().split('T')[0];
+    document.getElementById('check_in').setAttribute('min', today);
+    document.getElementById('check_out').setAttribute('min', today);
+   </script>
+  </body>
+</html>
